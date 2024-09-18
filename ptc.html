@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <!-- Include your pre-developed nav here -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <header class="page-header">
+                <h1>Admin Notifications</h1>
+                <p>Messages from the admin</p>
+            </header>
+
+            <!-- Notifications List -->
+            <section class="notifications-section">
+                <table class="notifications-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notificationList">
+                        <!-- Notifications will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Send Message to Admin Section -->
+            <section class="send-message-section">
+                <h2>Send Message to Admin</h2>
+                <form id="sendMessageForm">
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" rows="4" placeholder="Enter your message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+                <div id="messageStatus"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script >// Sample data for notifications (would typically come from a server)
+        const notifications = [
+            {
+                id: 1,
+                time: "10:00 AM - 2024-09-10",
+                message: "Please submit your weekly schedule.",
+                status: "unread"
+            },
+            {
+                id: 2,
+                time: "02:30 PM - 2024-09-09",
+                message: "The meeting has been rescheduled to 4 PM.",
+                status: "unread"
+            },
+            {
+                id: 3,
+                time: "11:00 AM - 2024-09-08",
+                message: "Reminder: Patient records need to be updated.",
+                status: "unread"
+            }
+        ];
+        
+        // Function to load notifications into the table
+        function loadNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = ''; // Clear any existing content
+        
+            notifications.forEach((notification) => {
+                if (notification.status === 'unread') {
+                    const row = document.createElement('tr');
+        
+                    // Time
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = notification.time;
+                    row.appendChild(timeCell);
+        
+                    // Message
+                    const messageCell = document.createElement('td');
+                    messageCell.textContent = notification.message;
+                    row.appendChild(messageCell);
+        
+                    // Actions
+                    const actionsCell = document.createElement('td');
+        
+                    // Mark as read button
+                    const actionButton = document.createElement('button');
+                    actionButton.textContent = 'Mark as Read';
+                    actionButton.classList.add('mark-read');
+                    actionButton.onclick = () => markAsRead(notification.id);
+                    actionsCell.appendChild(actionButton);
+        
+                    row.appendChild(actionsCell);
+                    notificationList.appendChild(row);
+                }
+            });
+        }
+        
+        // Function to mark notification as read and remove it from the list
+        function markAsRead(id) {
+            const notificationIndex = notifications.findIndex(n => n.id === id);
+            if (notificationIndex > -1) {
+                notifications[notificationIndex].status = 'read';
+                loadNotifications(); // Reload the notification list
+            }
+        }
+        
+        // Function to handle message sending
+        document.getElementById('sendMessageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value.trim();
+        
+            if (message) {
+                // Simulate sending message (in reality, you would send to a server)
+                console.log("Message sent to admin: " + message);
+        
+                // Show confirmation message
+                document.getElementById('messageStatus').textContent = "Message sent successfully!";
+                
+                // Clear the form
+                messageInput.value = '';
+            } else {
+                document.getElementById('messageStatus').textContent = "Please enter a message.";
+            }
+        });
+        
+        // Initial load of notifications
+        loadNotifications();
+        </script>
+
+    <style>/* Main content */
+        .main-content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: #333;
+        }
+        
+        p {
+            color: #666;
+        }
+        
+        /* Table styling */
+        .notifications-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        .notifications-table th,
+        .notifications-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .notifications-table th {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        
+        .notifications-table td {
+            color: #333;
+        }
+        
+        /* Button styling */
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button.mark-read {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        button.mark-read:hover {
+            opacity: 0.9;
+        }
+        
+        button.btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button.btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Send message section */
+        .send-message-section {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .send-message-section h2 {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        #messageStatus {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: green;
+        }
+        </style>
+
+</body>
+</html>
